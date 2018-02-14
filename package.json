@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/bstanger/csvreport/issues"
   },
-  "homepage": "https://github.com/bstanger/csvreport#readme"
+  "homepage": "https://github.com/bstanger/csvreport#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "jquery": "^3.3.1",
+    "nodemon": "^1.14.12"
+  }
 }
