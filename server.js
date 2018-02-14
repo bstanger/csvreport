@@ -11,6 +11,8 @@ app.use(bodyParser.json());
 
 /// HANDLE POST ///////////////////////////
 
+let rowId = -1;
+
 app.post('/', (req, res) => {
   dataHandler(req.body)
     .then( () => {
@@ -23,8 +25,7 @@ app.post('/', (req, res) => {
 var dataHandler = data => {
   return new Promise((resolve, reject) => {
     // Assumption: all fields are included at outset (diff ones won't be added later)
-    let row = -1;
-    var stringResult = createRows(data, row);
+    var stringResult = createRows(data, rowId);
     fs.writeFile('csv_report.csv', stringResult, (err) => {
       if(err) {
         reject(err);
@@ -35,24 +36,25 @@ var dataHandler = data => {
   });
 };
 
-var createRows = (data, row) => {
+var createRows = (data) => {
   let dataRow = "";
-  dataRow += (row === -1) ? " ," : (row + ",");
+  dataRow += (rowId === -1) ? " ," : (rowId + ",");
   for(var key in data){
     if (key !== "children"){
-      dataRow += (row === -1) ? key : data[key];
+      dataRow += (rowId === -1) ? key : data[key];
       dataRow += ',';
     }
   }
   dataRow = dataRow.substring(0, dataRow.length - 1); // Remove last comma
   dataRow += "\n"; // Add new line
-  if (row === -1) {
-    dataRow += createRows(data, ++row);
+  ++rowId;
+  if (rowId === 0) {
+    dataRow += createRows(data);
   } else if (data.children && data.children.length){
     for(var i = 0; i < data.children.length; i++){
-      dataRow += createRows(data.children[i], ++row);
+      dataRow += createRows(data.children[i]);
     }
-  };
+  } ;
   return dataRow;
 };
 
