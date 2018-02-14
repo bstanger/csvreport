@@ -23,7 +23,7 @@ app.post('/', (req, res) => {
 var dataHandler = data => {
   return new Promise((resolve, reject) => {
     // Assumption: all fields are included at outset (diff ones won't be added later)
-    let row = 0;
+    let row = -1;
     var stringResult = createRows(data, row);
     fs.writeFile('csv_report.csv', stringResult, (err) => {
       if(err) {
@@ -37,15 +37,16 @@ var dataHandler = data => {
 
 var createRows = (data, row) => {
   let dataRow = "";
+  dataRow += (row === -1) ? " ," : (row + ",");
   for(var key in data){
     if (key !== "children"){
-      dataRow += (row === 0) ? key : data[key];
+      dataRow += (row === -1) ? key : data[key];
       dataRow += ',';
     }
   }
   dataRow = dataRow.substring(0, dataRow.length - 1); // Remove last comma
   dataRow += "\n"; // Add new line
-  if (row === 0) {
+  if (row === -1) {
     dataRow += createRows(data, ++row);
   } else if (data.children && data.children.length){
     for(var i = 0; i < data.children.length; i++){

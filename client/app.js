@@ -17,6 +17,9 @@ var handleButtonClick = function(e){
 };
 
 var renderTable = (result) => {
+  if($('#results-table').length){
+    $('#results-table').remove();
+  }
   var $table = "<table id='results-table'></table>";
   $('#results').append($table);
   result = result.split('\n');
